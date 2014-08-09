@@ -80,8 +80,7 @@
 
 
 			$(function(){	
-								
-			    $("#dialog").dialog({
+				    $("#dialog").dialog({
 			    	autoOpen:false,
 			    	 height: 300,
       				width: 700,
