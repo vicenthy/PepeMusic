@@ -2,15 +2,15 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF8">
  <link href="../css/themes/redmond/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" />
-	<link href="../js/jtable/themes/metro/blue/jtable.css" rel="stylesheet" type="text/css" />
-	
-	<script src="../js/jquery-1.6.4.min.js" type="text/javascript"></script>
-    <script src="../js/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
-    <script src="../js/jtable/jquery.jtable.js" type="text/javascript"></script>
+ <link href="../js/jtable/themes/metro/blue/jtable.css" rel="stylesheet" type="text/css" />
+ <script src="../js/jquery-1.6.4.min.js" type="text/javascript"></script>
+ <script src="../js/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+ <script src="../js/jtable/jquery.jtable.js" type="text/javascript"></script>
+ <link href="../js/jtable/localization/jquery.jtable.pt-BR.js" rel="stylesheet" type="text/javascript" />	
 
 
 </head>
-<title>Sistema de Consulta de obras - PEPE MUSIC</title>
+<title>META-DADOS - Sistema de Consulta de obras - PEPE MUSIC</title>
 <body>
 <fieldset >
 <legend>Parametros da Consulta de Titular</legend>
@@ -24,7 +24,6 @@
 <input type="text" name="nome" id="nome" >
 <input type="button" id="buttonPes" value="Pesquisar">
 <input type="button" id="limpar" value="Limpar">
-
 </br>
 </form>
 <div id="table" ></div>
@@ -36,12 +35,10 @@
 <form id="fmrPrincipalObra" style="margin: 0 0 0 500px;">
 
 <select name="parametroObra" id="parametroObra">
-	<option value="nome">Nome</option>	
-	<option value="nomefantasia">Nome Fantasia</option>	
+	<option value="titulo">Titulo da obra</option>	
 	<option value="codecad">Código Ecad</option>	
 </select>
 <input type="text" name="nomeObra" id="nomeObra" >
-
 <input type="button" id="buttonPesObra" value="Pesquisar">
 <input type="button" id="limparObra" value="Limpar">
 
@@ -112,7 +109,6 @@
 		//openChildAsAccordion:true,
 		actions: {
 			listAction: 'buscar.php?action=list',
-
 		},
 
 		fields: {
@@ -310,40 +306,83 @@ $('#table').hide();
 
 	$('#tableObra').jtable({
 		title:'Obras Encontradas',
+		selecting: true,
 		//paging: true,
 		//pageSize: 20,
 		actions: {
-			listAction: 'buscar.php?action=list',
+			listAction: 'buscarObra2.php?action=listObra',
 
 		},
 
 		fields: {
 		
-		objref: {
+		obraobjref: {
 				key: true,
 				create: false,
 				edit: false,
 				list: false
 		},
 
-		nome: {
-			title: 'Nome',
+		titulo: {
+			title: 'Titulo da Obra',
 			width: '40%'
 			
 		},
 			
-		nomefantasia: {
-				title: 'Nome Fantasia',
+		obracodecad: {
+				title: 'Codigo Ecad',
 				width: '40%'
 			
-		},
-
-		codecad: {
-			title: 'Codido Ecad',
-			width: '40%'
 		}
 
-	}
+	},
+
+						selectionChanged: function(){
+
+
+							var $selectedRows = $('#tableObra').jtable('selectedRows');
+
+							$selectedRows.each(function(){
+
+								var $record = $(this).data('record');
+
+								obterobra($record.obraobjref);
+
+
+
+							});
+
+							function obterobra(objref){
+						$.ajax({
+								  url: 'exibirObras.php?action=listObra&objref='+objref,
+								  dataType: 'json',	
+	  							success: function(data) {
+  							
+ 						for($i=0; $i < data.length; $i++){
+
+							 			$( "#users tbody" ).append( 
+							 				"<tr>" +
+							          		"<td>" + data[$i].nometitular + "</td>" +
+							          		"<td>" + parseFloat(data[$i].percentual).toFixed(2)+ "%</td>" +
+							        		"</tr>" );
+
+									}
+
+								$('#dialog').dialog('open');
+
+								  }
+
+
+								});
+
+
+
+							}
+
+							
+
+						}
+
 	
 /*
 	selectionChanged: function () {
@@ -376,8 +415,8 @@ $('#table').hide();
 
 	$('#tableObra').jtable('load',{
 
-		nome: $('#nomeObra').val(),
-		parametro: $('#parametroObra').val()
+		nomeObra: $('#nomeObra').val(),
+		parametroObra:$('#parametroObra').val(),
 
 		 });
 

@@ -19,7 +19,7 @@ if($link->connect_error){
 		$row = $resultado->fetch_array();
 		$recordCount = $row['RecordCount'];			
 
-$sql = "select * from titular where ".$_POST["parametro"]." like '".$_POST["nome"]."%' "." LIMIT ".$_GET["jtStartIndex"].", ".$_GET["jtPageSize"];
+$sql = "select * from titular where ".$_POST["parametro"]." like '".$_POST["nome"]."%' "." order by nome asc LIMIT ".$_GET["jtStartIndex"].", ".$_GET["jtPageSize"];
 $resultado = $link->query($sql);
 		
 
