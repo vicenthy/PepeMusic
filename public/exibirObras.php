@@ -7,12 +7,12 @@ try{
 
 if($_GET["action"]=="listObra"){
 
-
-$link = new mysqli("localhost","root","","pepemusic");
+$link = new mysqli("192.185.216.114","pepemusi_atila","26642115","pepemusi_consulta");
 
 if($link->connect_error){
 	 die("Error ao conectar");
 }
+
 
 $sqlObra= "SELECT  t.nome as nometitular, ot.percentual as" 
 	    ." percentual FROM obra o" 
@@ -22,7 +22,7 @@ $sqlObra= "SELECT  t.nome as nometitular, ot.percentual as"
 		." WHERE o.objref = ".$_GET["objref"];
 
 
-$resultadoObra = $link->query($sqlObra);
+$resultadoObra = $link->query($sqlObra) or trigger_error($link->error."[$sqlObra]");
 		while($rowObra = $resultadoObra->fetch_array())
 		{
 		    $rowsObra[] = $rowObra;

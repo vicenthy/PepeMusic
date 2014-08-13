@@ -6,12 +6,13 @@ try{
 
 if($_GET["action"]=="listObra"){
 
-
-$link = new mysqli("localhost","root","","pepemusic");
+$link = new mysqli("192.185.216.114","pepemusi_atila","26642115","pepemusi_consulta");
 
 if($link->connect_error){
 	 die("Error ao conectar");
 }
+
+
 
 $sqlObra= "SELECT o.objref as obraobjref, o.titulo as titulo, o.codecad as obracodecad FROM obra o" 
 		." INNER JOIN obratitular ot"  
@@ -20,7 +21,7 @@ $sqlObra= "SELECT o.objref as obraobjref, o.titulo as titulo, o.codecad as obrac
 		." WHERE t.objref = ".$_GET["objref"];
 
 
-$resultadoObra = $link->query($sqlObra);
+$resultadoObra = $link->query($sqlObra) or trigger_error($link->error."[$sqlObra]");		
 		while($rowObra = $resultadoObra->fetch_array())
 		{
 		    $rowsObra[] = $rowObra;

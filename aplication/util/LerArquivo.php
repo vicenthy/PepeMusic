@@ -29,7 +29,6 @@ while(!feof($arquivo)){
 
 $linha = fgetss($arquivo);
 
-
 if(substr($linha, 0,8)==$this->cadastro1Obra){
 
 $this->obterObra($linha);
@@ -68,9 +67,7 @@ if($this->link->connect_error){
 }
 
 
-
-
-
+//método que obtem um titular atraves da linha do layout e persiste no banco
 function obterTitular($linha){
 
 $codecad = $this->obterCampoLayout($linha, 36, 13);
@@ -109,6 +106,8 @@ $this->inserirTitular($titular);
 
 
 
+
+//método que obtem uma obra atraves da linha do layout e persiste no banco
 function obterObra($linha){
 
 $codecad = $this->obterCampoLayout($linha, 9, 13);
@@ -127,13 +126,15 @@ $this->inserirObra($obra);
 
 
 
-
+//método que obtem um resgitro do layout 
 function obterCampoLayout($registro, $posini, $posfim){
 return substr($registro, $posini, $posfim);
-
 }
 
 
+
+
+//método que persiste um titular 
 function inserirTitular($titular){
 
 $this->link->query("insert into titular values (null,'".ltrim($titular->getNome(),'0')."','".ltrim($titular->getCodecad(),'0')."','".ltrim($titular->getTipoPessoa(),'0')."','".ltrim($titular->getNomeFantasia(),'0')."','null','null')");	
@@ -145,6 +146,8 @@ print("LINHA CODECAD TITULAR:  -> :  ".ltrim($titular->getCodecad(),'0')."</br>"
 print("LINHA PERCENTUAL:  -> :  ".$this->porcentagem."</br>");
 
 }
+
+
 
 
 function inserirObra($obra){
@@ -167,6 +170,8 @@ $this->link->query("insert into obratitular values (null,".$objreftitular.", ".$
 	print("OBRA TITULAR INSEIDA COM SUCESSO!</br>");		
 
 }
+
+
 
 function buscarTitular($codecad){
 
@@ -197,6 +202,8 @@ if($resultado = $resultado->fetch_object()){
 $objreftitular = $resultado->objref;
 
 }
+
+
 
 print($objreftitular."</br>");
 
@@ -257,8 +264,6 @@ return $valor1.".".$valor2;
 
 
 }
-
-
 
 
 

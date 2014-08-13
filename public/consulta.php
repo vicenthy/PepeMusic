@@ -1,56 +1,79 @@
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF8">
+ 
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF8">
  <link href="../css/themes/redmond/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" />
  <link href="../js/jtable/themes/metro/blue/jtable.css" rel="stylesheet" type="text/css" />
  <script src="../js/jquery-1.6.4.min.js" type="text/javascript"></script>
  <script src="../js/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
  <script src="../js/jtable/jquery.jtable.js" type="text/javascript"></script>
  <link href="../js/jtable/localization/jquery.jtable.pt-BR.js" rel="stylesheet" type="text/javascript" />	
-
-
-</head>
 <title>META-DADOS - Sistema de Consulta de obras - PEPE MUSIC</title>
-<body>
-<fieldset >
+</head>
 
+<body>
+
+<!--inicio div tabs-->
+<div id="tabs">
+
+  <!--link das tabs-->
+  <ul>
+    <li><a href="#tabs-1">Pesquisar por Titular</a></li>
+    <li><a href="#tabs-2">Pesquisar por Obra</a></li>
+  </ul>
+
+<!--inicio tabs1-->
+<div id="tabs-1">
+ <fieldset >
 <legend>Parametros da Consulta de Titular</legend>
-<form id="fmrPrincipal" style="margin: 0 0 0 500px;">
+<form id="fmrPrincipal">
 
 <select name="parametro" id="parametro" >
 	<option value="nome">Nome</option>	
-	<option value="nomefantasia">Nome Fantasia</option>	
+	<option value="nomefantasia">Nome Artístico</option>	
 	<option value="codecad">Código Ecad</option>	
 </select>
-<input type="text" name="nome" id="nome" >
+
+<input type="text" name="nome" id="nome" title="DIGITE O NOME, NOME ARTÍSTICO OU CÓDIGO ECAD DA OBRA">
 <input type="button" id="buttonPes" value="Pesquisar">
 <input type="button" id="limpar" value="Limpar">
-</br>
+<br />
 </form>
-<div id="table" ></div>
+
+<!--div Jtable Titular-->
+<div id="table" > </div>
 
 </fieldset>
 
+ </div>
+ <!--fim tab1-->
+
+<!--inicio tab2-->
+ <div id="tabs-2">
+
+ 
 <fieldset>
 <legend>Parametros da Consulta de Obra</legend>
-<form id="fmrPrincipalObra" style="margin: 0 0 0 500px;">
-
+<form id="fmrPrincipalObra" >
 <select name="parametroObra" id="parametroObra">
 	<option value="titulo">Titulo da obra</option>	
 	<option value="codecad">Código Ecad</option>	
 </select>
-<input type="text" name="nomeObra" id="nomeObra" >
+<input type="text" name="nomeObra" id="nomeObra" title="DIGITE O TÍTULO OU CÓDIGO ECAD DA OBRA">
 <input type="button" id="buttonPesObra" value="Pesquisar">
 <input type="button" id="limparObra" value="Limpar">
+<br />
 
-</br>
 </form>
-</fieldset>
 
 <div id="tableObra" ></div>
 
+</fieldset>
 
+  </div>
 
+ </div>
+ 
 <div id="dialog" title="Titulares da Obra">
 
 <div id="users-contain" class="ui-widget">
@@ -77,6 +100,11 @@
 	$(document).ready(function () {
 
 
+
+  $(function() {
+    $( "#tabs" ).tabs();
+  });
+
 			$(function(){	
 				    $("#dialog").dialog({
 			    	autoOpen:false,
@@ -88,6 +116,7 @@
 					$( "#users tr" ).remove();
 
 		$( "#users tbody" ).append( 
+
 						'<tr class="ui-widget-header ">'
         				+'<th>Titulares</th>'
         				+'<th>Percentual</th>'
@@ -103,11 +132,11 @@
 
 
 
+
 	$('#table').jtable({
 		title:'Titulares Encontrados',
 		paging: true,
-		pageSize: 20,
-		//openChildAsAccordion:true,
+		pageSize: 10,
 		actions: {
 			listAction: 'buscar.php?action=list',
 		},
@@ -167,18 +196,13 @@
 
 						selectionChanged: function(){
 
-
 							var $selectedRows = $childTable.childTable.jtable('selectedRows');
-
+							
 							$selectedRows.each(function(){
-
 								var $record = $(this).data('record');
-
 								obterobra($record.obraobjref);
-
-
-
 							});
+
 
 							function obterobra(objref){
 						$.ajax({
@@ -246,19 +270,8 @@
 
 	}
 	
-/*
-	selectionChanged: function () {
 
-	var selectedRows = $('#table').jtable('selectedRows');	
-	selectedRows.each(function(){
-		 record = $(this).data('record');
-	
-	});
-		
-				obterObras(record.objref);	
 
-	}
-*/
 });
 
 
@@ -273,15 +286,11 @@
 
 		$('#table').hide();
      
-
      });
  
 
-
-
 	$('#buttonPes').click(function(){
 	
-
 	$('#table').jtable('load',{
 
 		nome: $('#nome').val(),
@@ -299,17 +308,13 @@
 
 $('#table').hide();
 
-
-
 //#######JTABLE OBRA############
-
-
 
 	$('#tableObra').jtable({
 		title:'Obras Encontradas',
 		selecting: true,
-		//paging: true,
-		//pageSize: 20,
+		paging: true,
+		pageSize: 10,
 		actions: {
 			listAction: 'buscarObra2.php?action=listObra',
 
@@ -338,68 +343,48 @@ $('#table').hide();
 
 	},
 
-						selectionChanged: function(){
+		selectionChanged: function(){
+ 
+		var $selectedRows = $('#tableObra').jtable('selectedRows');
+		$selectedRows.each(function(){
+		var $record = $(this).data('record');
+		obterobra($record.obraobjref);
 
 
-							var $selectedRows = $('#tableObra').jtable('selectedRows');
+});
 
-							$selectedRows.each(function(){
+	function obterobra(objref){
 
-								var $record = $(this).data('record');
+		$.ajax({
+		  url: 'exibirObras.php?action=listObra&objref='+objref,
+		  dataType: 'json',	
 
-								obterobra($record.obraobjref);
-
-
-
-							});
-
-							function obterobra(objref){
-						$.ajax({
-								  url: 'exibirObras.php?action=listObra&objref='+objref,
-								  dataType: 'json',	
-	  							success: function(data) {
+         success: function(data) {
   							
- 						for($i=0; $i < data.length; $i++){
+ 		for($i=0; $i < data.length; $i++){
 
-							 			$( "#users tbody" ).append( 
-							 				"<tr>" +
-							          		"<td>" + data[$i].nometitular + "</td>" +
-							          		"<td>" + parseFloat(data[$i].percentual).toFixed(2)+ "%</td>" +
-							        		"</tr>" );
-
-									}
-
-								$('#dialog').dialog('open');
-
-								  }
-
-
-								});
-
-
-
-							}
-
+		$( "#users tbody" ).append( 
 							
+							"<tr>" +
+							"<td>" + data[$i].nometitular + "</td>" +
+							"<td>" + parseFloat(data[$i].percentual).toFixed(2)+ "%</td>" +
+							"</tr>" );
 
-						}
+		            	}
 
-	
-/*
-	selectionChanged: function () {
-
-	var selectedRows = $('#tableObra').jtable('selectedRows');	
-	selectedRows.each(function(){
-		 record = $(this).data('record');
-	
-	});
-		
-				obterObras(record.objref);	
-
-	}*/
+	$('#dialog').dialog('open');
 
 
-		});
+            	  }
+
+          });
+
+      }					
+
+   }
+
+
+});
 
 
 
@@ -413,7 +398,6 @@ $('#table').hide();
  
 	$('#buttonPesObra').click(function(){
 	
-
 	$('#tableObra').jtable('load',{
 
 		nomeObra: $('#nomeObra').val(),
@@ -431,15 +415,8 @@ $('#tableObra').hide();
 
 
 //#######FIM JTABLE OBRA#######################
-
-
 	
 });
 
-
-
-
-
 </script>
-
 </html>
